@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS  example_schedule (
   timestamp VARCHAR PRIMARY KEY,
-  demand_scheduled VARCHAR,
-  solar VARCHAR,
-  price VARCHAR,
-  price2 VARCHAR,
-  demand_bldg VARCHAR
+  demand_scheduled NUMERIC,
+  solar NUMERIC,
+  price NUMERIC,
+  price2 NUMERIC,
+  demand_bldg NUMERIC
 );
 
 COPY example_schedule
