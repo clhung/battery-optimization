@@ -10,8 +10,8 @@ class Battery:
     capacity: float  # kWh
     max_charge: float  # kW
     max_discharge: float  # kW
-    charge_efficiency: float = 0.9
-    discharge_efficiency: float = 0.9
+    charge_efficiency: float = 0.95
+    discharge_efficiency: float = 0.95
 
 
 @dataclass
@@ -60,10 +60,11 @@ class BatteryOptimization:
                 - self.discharge[t]
             ]
             self.constraints += [
-                self.charge <= self.z[t] * self.battery.max_charge
+                self.charge[t] <= self.z[t] * self.battery.max_charge
             ]
             self.constraints += [
-                self.discharge <= (1 - self.z[t]) * self.battery.max_discharge
+                self.discharge[t]
+                <= (1 - self.z[t]) * self.battery.max_discharge
             ]
 
             # power balance
@@ -75,13 +76,16 @@ class BatteryOptimization:
 
             # solar availability
             self.constraints += [
-                self.charge[t] + self.solar_gen <= self.system.solar
+                self.charge[t] + self.solar_gen[t] <= self.system.solar[t]
             ]
 
     def solve(self, initial_soc) -> pd.DataFrame:
         self.define_variables()
         self.define_constraints(initial_soc=initial_soc)
-        obj = cp.Minimize(cp.sum(self.grid_import * self.system.price))
+        obj = cp.Minimize(
+            cp.sum(cp.multiply(self.grid_import, self.system.price))
+        )
+
         problem = cp.Problem(obj, self.constraints)
         problem.solve(solver=cp.SCIPY, verbose=True)
 
