@@ -7,14 +7,25 @@ requires-python = ">=3.11"
 dependencies = [
     "black>=25.1.0",
     "cvxpy>=1.6.0",
+    "gym>=0.26.2",
     "isort>=6.0.0",
     "jupyterlab>=4.3.5",
     "numpy>=2.2.2",
     "pandas>=2.2.3",
     "plotly>=6.0.0",
     "pre-commit>=4.1.0",
+    "psycopg2-binary>=2.9.10",
+    "shimmy>=2.0.0",
     "sqlalchemy>=2.0.38",
+    "stable-baselines3>=2.5.0",
 ]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["battery_optimization"]
 
 # Black formatting
  [tool.black]
