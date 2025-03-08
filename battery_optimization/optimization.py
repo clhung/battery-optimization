@@ -16,13 +16,14 @@ class Battery:
 
 @dataclass
 class System:
+    timestamp: np.ndarray
     solar: np.ndarray
     load: np.ndarray
     price: np.ndarray
 
     @property
     def timesteps(self):
-        return len(self.load)
+        return len(self.timestamp)
 
 
 class BatteryOptimization:
@@ -91,6 +92,7 @@ class BatteryOptimization:
 
         return pd.DataFrame(
             data={
+                "timestamp": self.system.timestamp,
                 "charge": self.charge.value,
                 "discharge": self.discharge.value,
                 "soc": self.soc.value[0:-1],

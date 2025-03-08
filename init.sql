@@ -1,10 +1,19 @@
-CREATE TABLE IF NOT EXISTS example_schedule (
+CREATE TABLE IF NOT EXISTS forecast (
+  timestamp TIMESTAMP WITHOUT TIME ZONE PRIMARY KEY,
   demand NUMERIC,
-  solar NUMERIC,
   price NUMERIC,
-  timestamp TIMESTAMP WITHOUT TIME ZONE
+  solar NUMERIC
 );
 
-COPY example_schedule
-FROM '/data/combined.csv'
+CREATE TABLE IF NOT EXISTS optimization_results (
+  timestamp TIMESTAMP WITHOUT TIME ZONE PRIMARY KEY,
+  charge NUMERIC,
+  discharge NUMERIC,
+  soc NUMERIC,
+  grid_import NUMERIC,
+  solar_gen NUMERIC
+);
+
+COPY forecast
+FROM '/data/industrial/combined.csv'
 WITH CSV HEADER;

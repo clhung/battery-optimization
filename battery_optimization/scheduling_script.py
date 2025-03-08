@@ -1,37 +1,32 @@
-# from stable_baselines3 import PPO
+import pandas as pd
 
-from battery_optimization.data_sources import PostgresDataLoader
+from battery_optimization.data_sources import PostgresDataSource
 from battery_optimization.optimization import (
     Battery,
     BatteryOptimization,
     System,
 )
 
-# from dev.rl_optimization import SchedulerEnv
+
+def optimization_scheduler(start_time, optimization_horizon):
+    db_url = "postgresql://admin:admin@127.0.0.1:5432/db"
+    ds = PostgresDataSource(db_url)
+    data = ds.get_forecast_data(start_time, optimization_horizon)
+    battery = Battery(capacity=250, max_charge=50, max_discharge=50)
+    system = System(
+        data["timestamp"].to_numpy(),
+        data["solar"].to_numpy(),
+        data["demand"].to_numpy(),
+        data["price"].to_numpy(),
+    )
+    optimizer = BatteryOptimization(battery, system)
+    initial_soc = ds.get_initial_soc(start_time)
+    if initial_soc is None:
+        initial_soc = 50
+    results_df = optimizer.solve(initial_soc=initial_soc)
+    ds.update_optimization_results(results_df)
+
 
 if __name__ == "__main__":
-    db_url = "postgresql://admin:admin@127.0.0.1:5432/db"
-    loader = PostgresDataLoader(db_url)
-
-    data = loader.load_system_data()
-
-    battery = Battery(capacity=50, max_charge=10, max_discharge=10)
-    system = System(
-        data["solar"].iloc[0:].to_numpy(),
-        data["demand"].iloc[0:].to_numpy(),
-        data["price"].iloc[0:].to_numpy(),
-    )
-
-    optimizer = BatteryOptimization(battery, system)
-    results = optimizer.solve(initial_soc=25)
-    results.to_csv("results/battery_optimization.csv", index=False)
-
-    # Create Gym environment
-    # env = SchedulerEnv(battery, system)
-    #
-    # # Train RL model using PPO
-    # model = PPO("MlpPolicy", env, verbose=1)
-    # model.learn(total_timesteps=100000)
-    #
-    # # Save trained model
-    # model.save("models/ppo_battery_optimizer")
+    for start_time in pd.date_range("2023-01-01", "2023-01-31", freq="1D"):
+        optimization_scheduler(start_time, 36)
