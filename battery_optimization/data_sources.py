@@ -67,3 +67,14 @@ class PostgresDataSource:
             WHERE timestamp >= '{start_time}' AND timestamp < '{end_time}'
         """
         return pd.read_sql(query, self.engine)
+
+    def get_initial_soc(self, timestamp):
+        query = f"""
+            SELECT soc FROM optimization_results
+            WHERE timestamp = '{timestamp}'
+        """
+        df = pd.read_sql(query, self.engine)
+        if df.empty:
+            return None
+        else:
+            return df.loc[0, "soc"]
