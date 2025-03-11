@@ -7,10 +7,13 @@ requires-python = ">=3.11"
 dependencies = [
     "black>=25.1.0",
     "cvxpy>=1.6.0",
+    "dotenv>=0.9.9",
     "flake8>=7.1.2",
     "gym>=0.26.2",
     "isort>=6.0.0",
     "jupyterlab>=4.3.5",
+    "langchain>=0.3.20",
+    "langchain-openai>=0.3.8",
     "numpy>=2.2.2",
     "pandas>=2.2.3",
     "plotly>=6.0.0",
@@ -19,6 +22,7 @@ dependencies = [
     "shimmy>=2.0.0",
     "sqlalchemy>=2.0.38",
     "stable-baselines3>=2.5.0",
+    "streamlit>=1.43.1",
 ]
 
 [build-system]
