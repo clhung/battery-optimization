@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS optimization_results (
   charge NUMERIC,
   discharge NUMERIC,
   soc NUMERIC,
-  grid_import NUMERIC,
+  grid NUMERIC,
   solar_gen NUMERIC
 );
 
