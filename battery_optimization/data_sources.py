@@ -48,14 +48,14 @@ class PostgresDataSource:
         # merge data from tmp table
         upsert_query = text(
             f"""
-            INSERT INTO optimization_results (timestamp, charge, discharge, soc, grid_import, solar_gen)
-            SELECT timestamp, charge, discharge, soc, grid_import, solar_gen FROM {tmp_table}
+            INSERT INTO optimization_results (timestamp, charge, discharge, soc, grid, solar_gen)
+            SELECT timestamp, charge, discharge, soc, grid, solar_gen FROM {tmp_table}
             ON CONFLICT (timestamp)
             DO UPDATE SET
                 charge = EXCLUDED.charge,
                 discharge = EXCLUDED.discharge,
                 soc = EXCLUDED.soc,
-                grid_import = EXCLUDED.grid_import,
+                grid = EXCLUDED.grid,
                 solar_gen = EXCLUDED.solar_gen"""  # noqa
         )
         with self.engine.begin() as conn:
