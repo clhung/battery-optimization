@@ -95,7 +95,7 @@ class BatteryOptimization:
                 (timestamp.hour == 18) | (timestamp.hour == 19)
             ] = 1
 
-        # Stage 1: Dispatch Target
+        # Optimization stage 1: meeting the dispatch target
         dispatch_obj = cp.Maximize(
             cp.sum(
                 cp.multiply(self.dispatch_events, self.discharge - self.grid)
@@ -106,7 +106,7 @@ class BatteryOptimization:
 
         grid_fixed = self.grid.value.copy()
 
-        # Stage 2: Minimize Cost with Dispatch Results from Stage 1
+        # Optimization stage 2: minimize cost from previous stage
         fix_constraints = [
             self.grid[t] == grid_fixed[t]
             for t in range(self.ts)
